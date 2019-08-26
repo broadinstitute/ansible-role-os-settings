@@ -1,0 +1,25 @@
+- name: make sure ansible_merge_vars is installed
+  pip:
+    name: ansible_merge_vars
+    virtualenv: /usr/local/bin/ansible
+    virtualenv_site_packages: yes
+
+- name: Merge user variables
+  merge_vars:
+    suffix_to_merge: system_settings__to_merge
+    merged_var_name: merged_system_settings
+    expected_type: 'dict'
+
+- name: Set sysctl settings
+  filesystem:
+    ignoreerrors: "{{ sysctl.ignoreerrors | default(default_sysctl_ignoreerrors) }}"
+    name: "{{ sysctl.name }}"
+    reload: "{{ sysctl.reload | default(default_sysctl_reload) }}"
+    state: "{{ sysctl.state | default(default_sysctl_state) }}"
+    sysctl_file: "{{ sysctl.sysctl_file | default(default_sysctl_sysctl_file) }}"
+    sysctl_set: "{{ sysctl.sysctl_set | default(default_sysctl_sysctl_set) }}"
+    value: "{{ sysctl.value }}" 
+  with_items: "{{ merged_system_settings }}"
+  loop_control:
+    loop_var: sysctl
+  when: merged_system_settings.max_map_count is defined

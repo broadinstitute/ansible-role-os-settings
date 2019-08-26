@@ -1,0 +1,6 @@
+---
+default_sysctl_ignoreerrors: no
+default_sysctl_reload: yes
+default_sysctl_state: present
+default_sysctl_sysctl_file: "/etc/sysctl.conf"
+default_sysctl_sysctl_set: no
