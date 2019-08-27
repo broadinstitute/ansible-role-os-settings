@@ -6,7 +6,7 @@
 
 - name: Merge user variables
   merge_vars:
-    suffix_to_merge: system_settings__to_merge
+    suffix_to_merge: ossettings__to_merge
     merged_var_name: merged_system_settings
     expected_type: 'dict'
 
