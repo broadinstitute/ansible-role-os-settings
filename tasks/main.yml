@@ -11,7 +11,7 @@
     expected_type: 'dict'
 
 - name: Set sysctl settings
-  filesystem:
+  sysctl:
     ignoreerrors: "{{ sysctl.ignoreerrors | default(default_sysctl_ignoreerrors) }}"
     name: "{{ sysctl.name }}"
     reload: "{{ sysctl.reload | default(default_sysctl_reload) }}"
@@ -22,4 +22,4 @@
   with_items: "{{ merged_system_settings }}"
   loop_control:
     loop_var: sysctl
-  when: merged_system_settings.max_map_count is defined
+  when: merged_system_settings is defined
