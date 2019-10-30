@@ -4,11 +4,31 @@
     virtualenv: /usr/local/bin/ansible
     virtualenv_site_packages: yes
 
-- name: Merge user variables
+- name: Merge os variables
   merge_vars:
     suffix_to_merge: ossettings__to_merge
     merged_var_name: merged_system_settings
     expected_type: 'dict'
+
+- name: Merge network variables
+  merge_vars:
+    suffix_to_merge: networksettings__to_merge
+    merged_var_name: merged_network_settings
+    expected_type: 'dict'
+
+- name: Install nmcli
+  yum:
+    name: NetworkManager-glib
+    state: latest
+  when: merged_network_settings.eth0_mtu is defined
+
+- name: Set MTU
+  nmcli:
+    conn_name: eth0
+    mtu: "{{ merged_network_settings.eth0_mtu }}"
+    type: ethernet
+    state: present
+  when: merged_network_settings.eth0_mtu is defined
 
 - name: Set sysctl settings
   sysctl:
